@@ -25,13 +25,6 @@ import org.jivesoftware.util.PropertyEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.goodbytes.xmpp.xep0363.Component;
-import nl.goodbytes.xmpp.xep0363.Repository;
-import nl.goodbytes.xmpp.xep0363.RepositoryManager;
-import nl.goodbytes.xmpp.xep0363.SlotManager;
-import nl.goodbytes.xmpp.xep0363.repository.DirectoryRepository;
-import nl.goodbytes.xmpp.xep0363.repository.TempDirectoryRepository;
-
 /**
  * Created by guus on 18-11-17.
  */
@@ -53,30 +46,8 @@ public class HttpFileUploadPlugin implements Plugin, PropertyEventListener
     {
         try
         {
-            SlotManager.getInstance().setWebProtocol( JiveGlobals.getProperty( "plugin.httpfileupload.announcedWebProtocol", "https" ) );
-            SlotManager.getInstance().setWebHost( JiveGlobals.getProperty( "plugin.httpfileupload.announcedWebHost", XMPPServer.getInstance().getServerInfo().getHostname() ) );
-            SlotManager.getInstance().setWebPort( JiveGlobals.getIntProperty( "plugin.httpfileupload.announcedWebPort", HttpBindManager.getInstance().getHttpBindSecurePort() ) );
-            SlotManager.getInstance().setWebContextRoot( JiveGlobals.getProperty( "plugin.httpfileupload.announcedWebContextRoot", "/httpfileupload" ) );
             SlotManager.getInstance().setMaxFileSize( JiveGlobals.getLongProperty( "plugin.httpfileupload.maxFileSize", SlotManager.DEFAULT_MAX_FILE_SIZE ) );
-
-            Repository repository;
-            final String fileRepo = JiveGlobals.getProperty( "plugin.httpfileupload.fileRepo", null );
-
-            if ( fileRepo == null)
-            {
-                repository = new TempDirectoryRepository();
-            }
-            else {
-                try {
-                    final Path path = Paths.get( fileRepo );
-                    repository = new DirectoryRepository( path );
-
-                } catch ( InvalidPathException e ) {
-                    Log.error( "Invalid value for 'fileRepo' option: " + e.getMessage() );
-                    repository = new TempDirectoryRepository();
-                }
-            }
-            RepositoryManager.getInstance().initialize( repository );
+            SlotManager.getInstance().setUploadServicePath( JiveGlobals.getProperty( "plugin.httpfileupload.uploadServiceHost", SlotManager.DEFAULT_UPLOAD_SERVICE_HOST ) );
 
             PropertyEventDispatcher.addListener( this );
 
@@ -160,24 +131,9 @@ public class HttpFileUploadPlugin implements Plugin, PropertyEventListener
         if ( "plugin.httpfileupload.maxFileSize".equals( property ) )
         {
             SlotManager.getInstance().setMaxFileSize( JiveGlobals.getLongProperty( "plugin.httpfileupload.maxFileSize", SlotManager.DEFAULT_MAX_FILE_SIZE ) );
-        }
-        else
-
-        if ( "plugin.httpfileupload.announcedWebProtocol".equals( property ) )
+        } else if ( "plugin.httpfileupload.uploadServiceHost".equals( property ) )
         {
-            SlotManager.getInstance().setWebProtocol( JiveGlobals.getProperty( "plugin.httpfileupload.announcedWebProtocol", "https" ) );
-        }
-        else
-
-        if ( "plugin.httpfileupload.announcedWebHost".equals( property ) )
-        {
-            SlotManager.getInstance().setWebHost( JiveGlobals.getProperty( "plugin.httpfileupload.announcedWebHost", XMPPServer.getInstance().getServerInfo().getHostname() ) );
-        }
-        else
-
-        if ( "plugin.httpfileupload.announcedWebPort".equals( property ) )
-        {
-            SlotManager.getInstance().setWebPort( JiveGlobals.getIntProperty( "plugin.httpfileupload.announcedWebPort", HttpBindManager.getInstance().getHttpBindSecurePort() ) );
+            SlotManager.getInstance().setUploadServicePath( JiveGlobals.getProperty( "plugin.httpfileupload.uploadServiceHost", SlotManager.DEFAULT_UPLOAD_SERVICE_HOST ) );
         }
     }
 
@@ -186,24 +142,9 @@ public class HttpFileUploadPlugin implements Plugin, PropertyEventListener
         if ( "plugin.httpfileupload.maxFileSize".equals( property ) )
         {
             SlotManager.getInstance().setMaxFileSize( SlotManager.DEFAULT_MAX_FILE_SIZE );
-        }
-        else
-
-        if ( "plugin.httpfileupload.announcedWebProtocol".equals( property ) )
+        } else if ( "plugin.httpfileupload.uploadServiceHost".equals( property ) )
         {
-            SlotManager.getInstance().setWebProtocol( "https" );
-        }
-        else
-
-        if ( "plugin.httpfileupload.announcedWebHost".equals( property ) )
-        {
-            SlotManager.getInstance().setWebHost( XMPPServer.getInstance().getServerInfo().getHostname() );
-        }
-        else
-
-        if ( "plugin.httpfileupload.announcedWebPort".equals( property ) )
-        {
-            SlotManager.getInstance().setWebPort( HttpBindManager.getInstance().getHttpBindSecurePort() );
+            SlotManager.getInstance().setUploadServicePath( SlotManager.DEFAULT_UPLOAD_SERVICE_HOST );
         }
     }
 }
