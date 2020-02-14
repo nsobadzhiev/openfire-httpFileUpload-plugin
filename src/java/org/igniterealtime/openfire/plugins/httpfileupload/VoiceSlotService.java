@@ -1,8 +1,7 @@
 package org.igniterealtime.openfire.plugins.httpfileupload;
 
 import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jivesoftware.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,16 +12,15 @@ import java.net.URL;
 
 public final class VoiceSlotService implements SlotService {
 
-    private static final Logger Log = LoggerFactory.getLogger( VoiceSlotService.class );
-
     private String uploadServiceHost;
     private String uploadServiceResourcePath = "create-slot";
+    private int slotCreationTimeout = 15000;
 
     @Override
     public Slot createSlot(String user, String uploadId) {
-        String slotJson = null;
+        String slotJson;
         try {
-            slotJson = requestSlot(slotCreationUrl(user, uploadId), 15);
+            slotJson = requestSlot(slotCreationUrl(user, uploadId), 15000);
         } catch (MalformedURLException e) {
             Log.error(e.toString());
             return null;
@@ -34,16 +32,25 @@ public final class VoiceSlotService implements SlotService {
         return uploadServiceHost;
     }
 
+    public int getSlotCreationTimeout() {
+        return slotCreationTimeout;
+    }
+
     @Override
     public void setUploadServiceHost(String uploadServiceHost) {
         this.uploadServiceHost = uploadServiceHost;
+    }
+
+    @Override
+    public void setSlotCreationTimeout(int timeout) {
+        this.slotCreationTimeout = timeout;
     }
 
     private String requestSlot(URL url, int timeout) {
         HttpURLConnection c = null;
         try {
             c = (HttpURLConnection) url.openConnection();
-            c.setRequestMethod("GET");
+            c.setRequestMethod("POST");
             c.setRequestProperty("Content-length", "0");
             c.setUseCaches(false);
             c.setAllowUserInteraction(false);

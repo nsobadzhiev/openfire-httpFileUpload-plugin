@@ -19,8 +19,6 @@ package org.igniterealtime.openfire.plugins.httpfileupload;
 
 import org.xmpp.packet.JID;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * A manager of HTTP slots.
  *
@@ -33,10 +31,11 @@ public class SlotManager
     public static final long DEFAULT_MAX_FILE_SIZE = 50 * 1024 * 1024;
     private static SlotManager INSTANCE = null;
     private long maxFileSize = DEFAULT_MAX_FILE_SIZE;
+    public static final int DEFAULT_SLOT_TIMEOUT = 15000;
     public static final String DEFAULT_UPLOAD_SERVICE_HOST = "voice-service";
-    private long putExpiryValue = 3;
-    private TimeUnit putExpiryUnit = TimeUnit.MINUTES;
     private String uploadServicePath;
+
+    private int slotCreationTimeout = DEFAULT_SLOT_TIMEOUT;
     private SlotService slotService;
 
     private SlotManager()
@@ -73,6 +72,7 @@ public class SlotManager
 
         slotService = new VoiceSlotService();
         slotService.setUploadServiceHost(getUploadServicePath());
+        slotService.setSlotCreationTimeout(getSlotCreationTimeout());
         return slotService.createSlot(from.toBareJID(), fileName);
     }
 
@@ -81,8 +81,16 @@ public class SlotManager
         return uploadServicePath;
     }
 
-    public void setUploadServicePath( final String webContextRoot )
+    public void setUploadServicePath( final String uploadServicePath )
     {
         this.uploadServicePath = uploadServicePath;
+    }
+
+    public int getSlotCreationTimeout() {
+        return slotCreationTimeout;
+    }
+
+    public void setSlotCreationTimeout(int slotCreationTimeout) {
+        this.slotCreationTimeout = slotCreationTimeout;
     }
 }

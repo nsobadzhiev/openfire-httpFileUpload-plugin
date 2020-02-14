@@ -29,7 +29,6 @@ import org.xmpp.packet.IQ;
 import org.xmpp.packet.PacketError;
 
 import java.io.FileReader;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 

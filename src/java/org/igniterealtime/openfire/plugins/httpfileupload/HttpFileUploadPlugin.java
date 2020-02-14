@@ -33,13 +33,6 @@ public class HttpFileUploadPlugin implements Plugin, PropertyEventListener
     private static final Logger Log = LoggerFactory.getLogger( HttpFileUploadPlugin.class );
 
     private Component component;
-    private WebAppContext context;
-
-    private final String[] publicResources = new String[]
-        {
-            "httpfileupload/*",
-            "httpFileUpload/*"
-        };
 
     @Override
     public void initializePlugin( PluginManager manager, File pluginDirectory )
@@ -48,34 +41,19 @@ public class HttpFileUploadPlugin implements Plugin, PropertyEventListener
         {
             SlotManager.getInstance().setMaxFileSize( JiveGlobals.getLongProperty( "plugin.httpfileupload.maxFileSize", SlotManager.DEFAULT_MAX_FILE_SIZE ) );
             SlotManager.getInstance().setUploadServicePath( JiveGlobals.getProperty( "plugin.httpfileupload.uploadServiceHost", SlotManager.DEFAULT_UPLOAD_SERVICE_HOST ) );
+            SlotManager.getInstance().setSlotCreationTimeout( JiveGlobals.getIntProperty( "plugin.httpfileupload.slotCreationTimeout", SlotManager.DEFAULT_SLOT_TIMEOUT ) );
 
             PropertyEventDispatcher.addListener( this );
 
             component = new Component( XMPPServer.getInstance().getServerInfo().getXMPPDomain());
 
-            // Add the Webchat sources to the same context as the one that's providing the BOSH interface.
-            context = new WebAppContext( null, pluginDirectory.getPath() + File.separator + "classes", "/httpfileupload" );
-            context.setClassLoader( this.getClass().getClassLoader() );
-
-            // Ensure the JSP engine is initialized correctly (in order to be able to cope with Tomcat/Jasper precompiled JSPs).
-            final List<ContainerInitializer> initializers = new ArrayList<>();
-            initializers.add( new ContainerInitializer( new JettyJasperInitializer(), null ) );
-            context.setAttribute("org.eclipse.jetty.containerInitializers", initializers);
-            context.setAttribute( InstanceManager.class.getName(), new SimpleInstanceManager());
-
-            HttpBindManager.getInstance().addJettyHandler( context );
-
             InternalComponentManager.getInstance().addComponent( "httpfileupload", component );
-
-            for ( final String publicResource : publicResources )
-            {
-                AuthCheckFilter.addExclude( publicResource );
-            }
         }
         catch ( Exception e )
         {
             Log.error( "Unable to register component!", e );
         }
+        Log.error( "HTTP file upload initialized" );
 
     }
 
@@ -83,18 +61,6 @@ public class HttpFileUploadPlugin implements Plugin, PropertyEventListener
     public void destroyPlugin()
     {
         PropertyEventDispatcher.removeListener( this );
-
-        for ( final String publicResource : publicResources )
-        {
-            AuthCheckFilter.removeExclude( publicResource );
-        }
-
-        if ( context != null )
-        {
-            HttpBindManager.getInstance().removeJettyHandler( context );
-            context.destroy();
-            context = null;
-        }
 
         if ( component != null )
         {
