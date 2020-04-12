@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
-    <class>org.igniterealtime.openfire.plugins.httpfileupload.HttpFileUploadPlugin</class>
+    <class>chat.voiceup.openfire.plugin.httpfileupload.HttpFileUploadPlugin</class>
     <name>HTTP Voice Message Upload Plugin</name>
     <description>Allows clients to upload voice messages, using the XEP-0363 'HTTP File Upload' specification.</description>
     <author>Nikola Sobadjiev</author>
