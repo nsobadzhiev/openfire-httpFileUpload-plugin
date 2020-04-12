@@ -41,7 +41,10 @@ public class HttpFileUploadPlugin implements Plugin, PropertyEventListener
         {
             SlotManager.getInstance().setMaxFileSize( JiveGlobals.getLongProperty( "plugin.httpfileupload.maxFileSize", SlotManager.DEFAULT_MAX_FILE_SIZE ) );
             SlotManager.getInstance().setUploadServicePath( JiveGlobals.getProperty( "plugin.httpfileupload.uploadServiceHost", SlotManager.DEFAULT_UPLOAD_SERVICE_HOST ) );
+            SlotManager.getInstance().setUploadServiceLambda( JiveGlobals.getProperty( "plugin.httpfileupload.uploadServiceLambda", SlotManager.DEFAULT_UPLOAD_SERVICE_LAMBDA ) );
             SlotManager.getInstance().setSlotCreationTimeout( JiveGlobals.getIntProperty( "plugin.httpfileupload.slotCreationTimeout", SlotManager.DEFAULT_SLOT_TIMEOUT ) );
+            // TODO: Remove once we completely move to Lambda
+            SlotManager.getInstance().setUseLambda( JiveGlobals.getBooleanProperty( "plugin.httpfileupload.lambdaEnabled", false ) );
 
             PropertyEventDispatcher.addListener( this );
 

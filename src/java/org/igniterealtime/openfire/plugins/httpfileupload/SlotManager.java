@@ -33,7 +33,11 @@ public class SlotManager
     private long maxFileSize = DEFAULT_MAX_FILE_SIZE;
     public static final int DEFAULT_SLOT_TIMEOUT = 15000;
     public static final String DEFAULT_UPLOAD_SERVICE_HOST = "voice-service";
+    public static final String DEFAULT_UPLOAD_SERVICE_LAMBDA = "VoiceStorageLambda";
     private String uploadServicePath;
+    private String uploadServiceLambda;
+
+    private boolean useLambda = false;
 
     private int slotCreationTimeout = DEFAULT_SLOT_TIMEOUT;
     private SlotService slotService;
@@ -70,9 +74,7 @@ public class SlotManager
             throw new TooLargeException( fileSize, maxFileSize );
         }
 
-        slotService = new VoiceSlotService();
-        slotService.setUploadServiceHost(getUploadServicePath());
-        slotService.setSlotCreationTimeout(getSlotCreationTimeout());
+        slotService = getSlotService();
         return slotService.createSlot(from.toBareJID(), fileName);
     }
 
@@ -86,11 +88,32 @@ public class SlotManager
         this.uploadServicePath = uploadServicePath;
     }
 
+    public void setUploadServiceLambda( final String uploadServiceLambda ) {
+        this.uploadServiceLambda = uploadServiceLambda;
+    }
+
+    public void setUseLambda(boolean useLambda) {
+        this.useLambda = useLambda;
+    }
+
     public int getSlotCreationTimeout() {
         return slotCreationTimeout;
     }
 
     public void setSlotCreationTimeout(int slotCreationTimeout) {
         this.slotCreationTimeout = slotCreationTimeout;
+    }
+
+    private SlotService getSlotService() {
+        SlotService service;
+        if (useLambda) {
+            service = new LambdaSlotService();
+            service.setUploadServiceHost(uploadServiceLambda);
+        } else {
+            service = new VoiceSlotService();
+            service.setUploadServiceHost(getUploadServicePath());
+        }
+        service.setSlotCreationTimeout(getSlotCreationTimeout());
+        return service;
     }
 }
