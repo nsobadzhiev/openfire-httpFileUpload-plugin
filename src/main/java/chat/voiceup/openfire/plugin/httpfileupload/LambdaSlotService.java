@@ -14,7 +14,7 @@ public class LambdaSlotService implements SlotService {
 
     private AWSLambda lambdaClient = AWSLambdaClientBuilder.standard().build();
 
-    private static final Logger Log = LoggerFactory.getLogger( LambdaSlotService.class );
+    private static final Logger Log = LoggerFactory.getLogger(LambdaSlotService.class);
 
     @Override
     public void setUploadServiceHost(String host) {
