@@ -7,8 +7,6 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
-
 public class LambdaSlotService implements SlotService {
 
     private String lambdaName;
@@ -37,14 +35,14 @@ public class LambdaSlotService implements SlotService {
         request.setSdkClientExecutionTimeout(slotCreationTimeout);
         InvokeResult response = lambdaClient.invoke(request);
         int statusCode = response.getStatusCode();
+        String resultJSON = new String(response.getPayload().array());
         if (statusCode < 200 || statusCode >= 300) {
             String error = response.getFunctionError();
-            Log.error("Failed to create slot", error);
+            Log.error("Failed to create slot {}", error);
             throw new SlotCreationException(error, statusCode);
         } else {
-            Log.info("Received a slot", new String(response.getPayload().array(), StandardCharsets.UTF_8));
+            Log.debug("Received a slot {}", resultJSON);
         }
-        String resultJSON = new String(response.getPayload().array(), StandardCharsets.UTF_8);
         return new Gson().fromJson(resultJSON, Slot.class);
     }
 }
