@@ -15,7 +15,7 @@
  *
  */
 
-package org.igniterealtime.openfire.plugins.httpfileupload;
+package chat.voiceup.openfire.plugin.httpfileupload;
 
 import org.xmpp.packet.JID;
 

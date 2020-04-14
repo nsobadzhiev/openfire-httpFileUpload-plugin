@@ -1,4 +1,4 @@
-package org.igniterealtime.openfire.plugins.httpfileupload;
+package chat.voiceup.openfire.plugin.httpfileupload;
 
 public class LambdaSlotRequest {
 
