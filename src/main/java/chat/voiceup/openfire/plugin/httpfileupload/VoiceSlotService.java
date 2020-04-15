@@ -1,4 +1,4 @@
-package org.igniterealtime.openfire.plugins.httpfileupload;
+package chat.voiceup.openfire.plugin.httpfileupload;
 
 import com.google.gson.Gson;
 import org.jivesoftware.util.Log;
@@ -17,7 +17,7 @@ public final class VoiceSlotService implements SlotService {
     private int slotCreationTimeout = 15000;
 
     @Override
-    public Slot createSlot(String user, String uploadId) {
+    public Slot createSlot(String user, String uploadId) throws SlotCreationException {
         String slotJson;
         try {
             slotJson = requestSlot(slotCreationUrl(user, uploadId), 15000);

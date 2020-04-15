@@ -15,31 +15,25 @@
  *
  */
 
-package org.igniterealtime.openfire.plugins.httpfileupload;
+package chat.voiceup.openfire.plugin.httpfileupload;
 
-/**
- * An exception indicating that a 'desire' is larger than a particular maximum.
- *
- * @author Guus der Kinderen, guus@goodbytes.
- */
-public class TooLargeException extends Exception
-{
-    private final long desired;
-    private final long maximum;
-
-    public TooLargeException(long desired, long maximum )
-    {
-        this.desired = desired;
-        this.maximum = maximum;
+public class Slot {
+    public SlotEntry getUpload() {
+        return upload;
     }
 
-    public long getDesired()
-    {
-        return desired;
+    public void setUpload(SlotEntry upload) {
+        this.upload = upload;
     }
 
-    public long getMaximum()
-    {
-        return maximum;
+    public SlotEntry getDownload() {
+        return download;
     }
+
+    public void setDownload(SlotEntry download) {
+        this.download = download;
+    }
+
+    private SlotEntry upload;
+    private SlotEntry download;
 }

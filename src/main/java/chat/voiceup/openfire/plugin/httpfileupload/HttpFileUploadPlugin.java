@@ -1,24 +1,12 @@
-package org.igniterealtime.openfire.plugins.httpfileupload;
+package chat.voiceup.openfire.plugin.httpfileupload;
 
 import java.io.File;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.InstanceManager;
-import org.apache.tomcat.SimpleInstanceManager;
-import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
-import org.eclipse.jetty.plus.annotation.ContainerInitializer;
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.jivesoftware.admin.AuthCheckFilter;
 import org.jivesoftware.openfire.XMPPServer;
 import org.jivesoftware.openfire.component.InternalComponentManager;
 import org.jivesoftware.openfire.container.Plugin;
 import org.jivesoftware.openfire.container.PluginManager;
-import org.jivesoftware.openfire.http.HttpBindManager;
 import org.jivesoftware.util.JiveGlobals;
 import org.jivesoftware.util.PropertyEventDispatcher;
 import org.jivesoftware.util.PropertyEventListener;
@@ -41,7 +29,10 @@ public class HttpFileUploadPlugin implements Plugin, PropertyEventListener
         {
             SlotManager.getInstance().setMaxFileSize( JiveGlobals.getLongProperty( "plugin.httpfileupload.maxFileSize", SlotManager.DEFAULT_MAX_FILE_SIZE ) );
             SlotManager.getInstance().setUploadServicePath( JiveGlobals.getProperty( "plugin.httpfileupload.uploadServiceHost", SlotManager.DEFAULT_UPLOAD_SERVICE_HOST ) );
+            SlotManager.getInstance().setUploadServiceLambda( JiveGlobals.getProperty( "plugin.httpfileupload.uploadServiceLambda", SlotManager.DEFAULT_UPLOAD_SERVICE_LAMBDA ) );
             SlotManager.getInstance().setSlotCreationTimeout( JiveGlobals.getIntProperty( "plugin.httpfileupload.slotCreationTimeout", SlotManager.DEFAULT_SLOT_TIMEOUT ) );
+            // TODO: Remove once we completely move to Lambda
+            SlotManager.getInstance().setUseLambda( JiveGlobals.getBooleanProperty( "plugin.httpfileupload.lambdaEnabled", false ) );
 
             PropertyEventDispatcher.addListener( this );
 
