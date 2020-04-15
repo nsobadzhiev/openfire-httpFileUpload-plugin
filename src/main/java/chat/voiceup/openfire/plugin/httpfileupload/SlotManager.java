@@ -26,8 +26,7 @@ import org.xmpp.packet.JID;
  */
 // TODO: quick 'n dirty singleton. Is this the best choice?
 // TODO: persist internal state to allow for restart survival.
-public class SlotManager
-{
+public class SlotManager {
     public static final long DEFAULT_MAX_FILE_SIZE = 50 * 1024 * 1024;
     private static SlotManager INSTANCE = null;
     private long maxFileSize = DEFAULT_MAX_FILE_SIZE;
@@ -42,53 +41,42 @@ public class SlotManager
     private int slotCreationTimeout = DEFAULT_SLOT_TIMEOUT;
     private SlotService slotService;
 
-    private SlotManager()
-    {
+    private SlotManager() {
 
     }
 
-    public synchronized static SlotManager getInstance()
-    {
-        if ( INSTANCE == null )
-        {
+    public synchronized static SlotManager getInstance() {
+        if (INSTANCE == null) {
             INSTANCE = new SlotManager();
         }
-
         return INSTANCE;
     }
 
-    public long getMaxFileSize()
-    {
+    public long getMaxFileSize() {
         return maxFileSize;
     }
 
-    public void setMaxFileSize( long maxFileSize )
-    {
+    public void setMaxFileSize(long maxFileSize) {
         this.maxFileSize = maxFileSize;
     }
 
-    public Slot getSlot(JID from, String fileName, long fileSize ) throws TooLargeException
-    {
-        if ( maxFileSize > 0 && fileSize > maxFileSize )
-        {
-            throw new TooLargeException( fileSize, maxFileSize );
+    public Slot getSlot(JID from, String fileName, long fileSize) throws TooLargeException {
+        if (maxFileSize > 0 && fileSize > maxFileSize) {
+            throw new TooLargeException(fileSize, maxFileSize);
         }
-
         slotService = getSlotService();
         return slotService.createSlot(from.toBareJID(), fileName);
     }
 
-    public String getUploadServicePath()
-    {
+    public String getUploadServicePath() {
         return uploadServicePath;
     }
 
-    public void setUploadServicePath( final String uploadServicePath )
-    {
+    public void setUploadServicePath(final String uploadServicePath) {
         this.uploadServicePath = uploadServicePath;
     }
 
-    public void setUploadServiceLambda( final String uploadServiceLambda ) {
+    public void setUploadServiceLambda(final String uploadServiceLambda) {
         this.uploadServiceLambda = uploadServiceLambda;
     }
 
